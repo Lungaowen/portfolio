@@ -1177,3 +1177,35 @@ button {
     gap: 8px;
   }
 }
+
+
+/* Icon size tuning: smaller, with a hard cap so they can never blow up */
+svg.icon {
+  width: 14px;
+  height: 14px;
+  max-width: 20px;
+  max-height: 20px;
+}
+
+.button svg.icon {
+  width: 14px;
+  height: 14px;
+}
+
+.header-link svg.icon,
+.text-link svg.icon,
+.inline-link svg.icon {
+  width: 12px;
+  height: 12px;
+}
+
+.with-icon svg.icon,
+.experience-when svg.icon {
+  width: 13px;
+  height: 13px;
+}
+
+.stack-label svg.icon {
+  width: 15px;
+  height: 15px;
+}
