@@ -156,8 +156,9 @@ button {
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.65fr);
-  gap: 8vw;
+  grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.75fr);
+  width: min(1320px, 93vw);
+  gap: 6vw;
   min-height: calc(100vh - 78px);
   align-items: center;
   padding-top: 80px;
@@ -172,6 +173,20 @@ button {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+.hero-video {
+  animation: hero-pan 26s ease-in-out infinite alternate;
+}
+
+@keyframes hero-pan {
+  from {
+    transform: scale(1.04);
+  }
+
+  to {
+    transform: scale(1.14);
+  }
 }
 
 .hero h1 {
@@ -272,6 +287,18 @@ button {
   height: 8px;
   border-radius: 50%;
   background: var(--gold);
+  animation: note-pulse 2.6s ease-out infinite;
+}
+
+@keyframes note-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(123, 224, 195, 0.65);
+  }
+
+  70%,
+  100% {
+    box-shadow: 0 0 0 14px rgba(123, 224, 195, 0);
+  }
 }
 
 .focus-project {
@@ -573,11 +600,19 @@ button {
 .ring-one {
   width: 150px;
   height: 150px;
+  animation: ring-spin 26s linear infinite;
 }
 
 .ring-two {
   width: 245px;
   height: 245px;
+  animation: ring-spin 40s linear infinite reverse;
+}
+
+@keyframes ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .visual-core {
@@ -806,6 +841,18 @@ button {
   }
 
   .ticker-track {
+    animation: none;
+  }
+
+  .note-dot {
+    animation: none;
+  }
+
+  .visual-ring {
+    animation: none;
+  }
+
+  .hero-video {
     animation: none;
   }
 

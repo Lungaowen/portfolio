@@ -39,3 +39,20 @@ if (menuToggle && siteNav) {
     if (window.innerWidth > 920) closeMenu();
   });
 }
+
+const heroVideo = document.querySelector(".hero-video");
+
+if (heroVideo) {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  const syncMotion = () => {
+    if (reduceMotion.matches) {
+      heroVideo.pause();
+    } else {
+      heroVideo.play().catch(() => {});
+    }
+  };
+
+  reduceMotion.addEventListener("change", syncMotion);
+  syncMotion();
+}
