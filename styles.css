@@ -1091,3 +1091,89 @@ button {
     padding: 32px 0;
   }
 }
+
+
+/* Icons */
+.icon {
+  flex: none;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+
+.button .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.header-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-link .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.text-link {
+  align-items: center;
+}
+
+.text-link .icon {
+  width: 14px;
+  height: 14px;
+  transition: transform 180ms ease;
+}
+
+.text-link:hover .icon {
+  transform: translate(2px, -2px);
+}
+
+.inline-link .icon {
+  width: 13px;
+  height: 13px;
+  margin-left: 2px;
+}
+
+.with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.with-icon .icon {
+  width: 14px;
+  height: 14px;
+  color: var(--green);
+}
+
+.stack-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stack-label .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--green);
+}
+
+.experience-when {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.experience-when .icon {
+  width: 15px;
+  height: 15px;
+}
+
+@media (max-width: 620px) {
+  .stack-label {
+    gap: 8px;
+  }
+}
