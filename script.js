@@ -77,8 +77,10 @@ const cvSafeText = (value) => String(value || "")
   .replace(/[\u201C\u201D]/g, '"')
   .replace(/[\u2013\u2014]/g, "-")
   .replace(/\u2192/g, "->")
-  .replace(/[\u00B7\u2022]/g, "|")
+  .replace(/\u00B7/g, ",")
+  .replace(/\u2022/g, "|")
   .replace(/[^\x20-\x7E]/g, " ")
+  .replace(/\s+,/g, ",")
   .replace(/\s+/g, " ")
   .trim();
 
@@ -162,8 +164,8 @@ const downloadGeneratedCv = () => {
     });
   };
 
-  const heading = (title) => {
-    ensureSpace(16);
+  const heading = (title, minSpace = 16) => {
+    ensureSpace(minSpace);
     y += 4;
     font("bold", 10);
     doc.text(title.toUpperCase(), margin, y);
@@ -241,7 +243,8 @@ const downloadGeneratedCv = () => {
   heading("Selected Projects");
   document.querySelectorAll("#work .project").forEach((project) => {
     const name = cvText(project.querySelector("h3"));
-    const description = cvText(project.querySelector(".project-description"));
+    const description = cvText(project.querySelector(".project-description"))
+      .replace(/I'm the sole architect, now leading/, "Sole architect, now leading");
     const tags = Array.from(project.querySelectorAll(".tags span")).map(cvText).filter(Boolean).join(", ");
     ensureSpace(14);
     paragraph(name, { style: "bold", after: 0.2 });
@@ -249,12 +252,12 @@ const downloadGeneratedCv = () => {
     if (tags) paragraph("Technologies: " + tags, { grey: true, after: 1.6 });
   });
 
-  heading("Technical Skills");
+  heading("Technical Skills", 52);
   document.querySelectorAll(".stack-section .stack-row").forEach((row) => {
     labelRow(cvText(row.querySelector(".stack-label")), cvText(row.querySelectorAll("span")[1]));
   });
 
-  heading("Education & Certifications");
+  heading("Education & Certifications", 28);
   document.querySelectorAll(".credentials-section .stack-row").forEach((row) => {
     const label = cvText(row.querySelector(".stack-label"));
     if (/^(next up|practice)$/i.test(label)) return;
