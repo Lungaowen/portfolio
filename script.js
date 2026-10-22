@@ -62,7 +62,7 @@ const downloadCvButton = document.querySelector("#download-cv");
 const cvDownloadStatus = document.querySelector("#cv-download-status");
 
 const cvText = (element) => (element?.innerText || element?.textContent || "")
-  .replace(/\\s+/g, " ")
+  .replace(/\s+/g, " ")
   .trim();
 
 const cvSafeText = (value) => String(value || "")
@@ -70,8 +70,8 @@ const cvSafeText = (value) => String(value || "")
   .replace(/[“”]/g, '"')
   .replace(/[–—]/g, "-")
   .replace(/[·•]/g, "|")
-  .replace(/[^\\x20-\\x7E]/g, " ")
-  .replace(/\\s+/g, " ")
+  .replace(/[^\x20-\x7E]/g, " ")
+  .replace(/\s+/g, " ")
   .trim();
 
 const downloadGeneratedCv = () => {
@@ -133,7 +133,7 @@ const downloadGeneratedCv = () => {
   doc.text("SOLUTIONS ARCHITECTURE | SOFTWARE ENGINEERING | AI/ML", margin, 24);
   doc.setFontSize(9);
   doc.setTextColor(...muted);
-  const contactLine = [location, email, "GitHub: " + github.replace(/^https?:\\/\\//, "")].filter(Boolean).join(" | ");
+  const contactLine = [location, email, "GitHub: " + github.replace("https://", "").replace("http://", "")].filter(Boolean).join(" | ");
   const contactLines = doc.splitTextToSize(cvSafeText(contactLine), pageWidth - margin * 2);
   doc.text(contactLines, margin, 31);
 
