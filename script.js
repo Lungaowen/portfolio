@@ -74,15 +74,72 @@ const cvSafeText = (value) => String(value || "")
   .replace(/\s+/g, " ")
   .trim();
 
+const pdfLibrarySources = {
+  jspdf: [
+    "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js",
+    "https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js",
+    "https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"
+  ],
+  autoTable: [
+    "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js",
+    "https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js",
+    "https://unpkg.com/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"
+  ]
+};
+
+const loadScriptFromSources = (sources, isReady) => new Promise((resolve, reject) => {
+  if (isReady()) {
+    resolve();
+    return;
+  }
+
+  let sourceIndex = 0;
+  const tryNextSource = () => {
+    if (isReady()) {
+      resolve();
+      return;
+    }
+    if (sourceIndex >= sources.length) {
+      reject(new Error("Could not load the PDF generator from the available CDNs. Check your internet connection, disable any content blocker for this site, and try again."));
+      return;
+    }
+
+    const source = sources[sourceIndex++];
+    const scriptElement = document.createElement("script");
+    scriptElement.src = source;
+    scriptElement.async = true;
+    scriptElement.onload = () => {
+      if (isReady()) resolve();
+      else tryNextSource();
+    };
+    scriptElement.onerror = () => {
+      scriptElement.remove();
+      tryNextSource();
+    };
+    document.head.appendChild(scriptElement);
+  };
+
+  tryNextSource();
+});
+
+const ensurePdfLibraries = async () => {
+  await loadScriptFromSources(pdfLibrarySources.jspdf, () => Boolean(window.jspdf?.jsPDF));
+  await loadScriptFromSources(pdfLibrarySources.autoTable, () => {
+    if (!window.jspdf?.jsPDF) return false;
+    const testDocument = new window.jspdf.jsPDF();
+    return typeof testDocument.autoTable === "function";
+  });
+};
+
 const downloadGeneratedCv = () => {
   if (!window.jspdf?.jsPDF) {
-    throw new Error("The PDF library has not loaded. Check your connection and try again.");
+    throw new Error("The PDF generator is not ready yet. Please click Download CV again.");
   }
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   if (typeof doc.autoTable !== "function") {
-    throw new Error("The PDF table plugin has not loaded. Please try again.");
+    throw new Error("The PDF table plugin did not load correctly. Please try again.");
   }
 
   const ink = [20, 33, 31];
@@ -210,17 +267,18 @@ const downloadGeneratedCv = () => {
 };
 
 if (downloadCvButton) {
-  downloadCvButton.addEventListener("click", () => {
+  downloadCvButton.addEventListener("click", async () => {
     downloadCvButton.disabled = true;
     if (cvDownloadStatus) cvDownloadStatus.textContent = "Preparing your latest CV...";
     try {
+      await ensurePdfLibraries();
       downloadGeneratedCv();
       if (cvDownloadStatus) cvDownloadStatus.textContent = "Your CV was generated from the current portfolio content.";
     } catch (error) {
       console.error("CV generation failed:", error);
       if (cvDownloadStatus) cvDownloadStatus.textContent = error.message || "Could not generate the CV. Please try again.";
     } finally {
-      window.setTimeout(() => { downloadCvButton.disabled = false; }, 800);
+      downloadCvButton.disabled = false;
     }
   });
 }
